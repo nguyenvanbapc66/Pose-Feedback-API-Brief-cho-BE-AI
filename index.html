@@ -1,0 +1,944 @@
+<title>Pose Feedback API — Brief cho BE & AI</title>
+<style>
+  :root {
+    --bg: #f4f6f8;
+    --surface: #ffffff;
+    --surface-2: #edf1f4;
+    --code-bg: #f0f3f6;
+    --text: #1a2430;
+    --heading: #0f1720;
+    --muted: #5c6875;
+    --border: #e0e6ec;
+    --border-strong: #cdd6de;
+    --accent: #0e7c7b;
+    --accent-soft: rgba(14, 124, 123, 0.1);
+    --green: #2e7d32;
+    --green-bg: rgba(46, 125, 50, 0.12);
+    --yellow: #b7791f;
+    --yellow-bg: rgba(183, 121, 31, 0.14);
+    --red: #c62828;
+    --red-bg: rgba(198, 40, 40, 0.1);
+    --get: #1d6fd6;
+    --get-bg: rgba(29, 111, 214, 0.12);
+    --post: #b45309;
+    --post-bg: rgba(180, 83, 9, 0.12);
+    --new: #0e7c7b;
+    --new-bg: rgba(14, 124, 123, 0.12);
+    /* JSON */
+    --j-key: #0b6e6c;
+    --j-str: #397a2b;
+    --j-num: #9a5b00;
+    --j-bool: #8250df;
+    --j-punc: #7a8794;
+    --shadow: 0 1px 2px rgba(16, 24, 32, 0.04), 0 4px 16px rgba(16, 24, 32, 0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1015;
+      --surface: #151a21;
+      --surface-2: #1b222b;
+      --code-bg: #12171e;
+      --text: #dde3ea;
+      --heading: #f1f5f9;
+      --muted: #94a2b1;
+      --border: #262e39;
+      --border-strong: #333d49;
+      --accent: #38c6c1;
+      --accent-soft: rgba(56, 198, 193, 0.12);
+      --green: #57c36a;
+      --green-bg: rgba(87, 195, 106, 0.14);
+      --yellow: #e5b54b;
+      --yellow-bg: rgba(229, 181, 75, 0.14);
+      --red: #ef6360;
+      --red-bg: rgba(239, 99, 96, 0.14);
+      --get: #5aa0f2;
+      --get-bg: rgba(90, 160, 242, 0.14);
+      --post: #e0a458;
+      --post-bg: rgba(224, 164, 88, 0.14);
+      --new: #38c6c1;
+      --new-bg: rgba(56, 198, 193, 0.14);
+      --j-key: #7fd1ce;
+      --j-str: #a8ce96;
+      --j-num: #e6c07b;
+      --j-bool: #c5a3ff;
+      --j-punc: #7e8b99;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.35);
+    }
+  }
+  :root[data-theme='light'] {
+    --bg: #f4f6f8;
+    --surface: #ffffff;
+    --surface-2: #edf1f4;
+    --code-bg: #f0f3f6;
+    --text: #1a2430;
+    --heading: #0f1720;
+    --muted: #5c6875;
+    --border: #e0e6ec;
+    --border-strong: #cdd6de;
+    --accent: #0e7c7b;
+    --accent-soft: rgba(14, 124, 123, 0.1);
+    --green: #2e7d32;
+    --green-bg: rgba(46, 125, 50, 0.12);
+    --yellow: #b7791f;
+    --yellow-bg: rgba(183, 121, 31, 0.14);
+    --red: #c62828;
+    --red-bg: rgba(198, 40, 40, 0.1);
+    --get: #1d6fd6;
+    --get-bg: rgba(29, 111, 214, 0.12);
+    --post: #b45309;
+    --post-bg: rgba(180, 83, 9, 0.12);
+    --new: #0e7c7b;
+    --new-bg: rgba(14, 124, 123, 0.12);
+    --j-key: #0b6e6c;
+    --j-str: #397a2b;
+    --j-num: #9a5b00;
+    --j-bool: #8250df;
+    --j-punc: #7a8794;
+    --shadow: 0 1px 2px rgba(16, 24, 32, 0.04), 0 4px 16px rgba(16, 24, 32, 0.06);
+  }
+  :root[data-theme='dark'] {
+    --bg: #0d1015;
+    --surface: #151a21;
+    --surface-2: #1b222b;
+    --code-bg: #12171e;
+    --text: #dde3ea;
+    --heading: #f1f5f9;
+    --muted: #94a2b1;
+    --border: #262e39;
+    --border-strong: #333d49;
+    --accent: #38c6c1;
+    --accent-soft: rgba(56, 198, 193, 0.12);
+    --green: #57c36a;
+    --green-bg: rgba(87, 195, 106, 0.14);
+    --yellow: #e5b54b;
+    --yellow-bg: rgba(229, 181, 75, 0.14);
+    --red: #ef6360;
+    --red-bg: rgba(239, 99, 96, 0.14);
+    --get: #5aa0f2;
+    --get-bg: rgba(90, 160, 242, 0.14);
+    --post: #e0a458;
+    --post-bg: rgba(224, 164, 88, 0.14);
+    --new: #38c6c1;
+    --new-bg: rgba(56, 198, 193, 0.14);
+    --j-key: #7fd1ce;
+    --j-str: #a8ce96;
+    --j-num: #e6c07b;
+    --j-bool: #c5a3ff;
+    --j-punc: #7e8b99;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family:
+      system-ui,
+      -apple-system,
+      'Segoe UI',
+      Roboto,
+      sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 22px 88px;
+  }
+
+  code,
+  pre,
+  .mono {
+    font-family: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Cascadia Code', 'Roboto Mono', monospace;
+  }
+
+  /* Header */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 26px;
+    margin-bottom: 34px;
+  }
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-size: clamp(26px, 4.4vw, 38px);
+    line-height: 1.15;
+    margin: 0 0 12px;
+    color: var(--heading);
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+  .lede {
+    font-size: 17px;
+    color: var(--muted);
+    margin: 0 0 18px;
+    max-width: 62ch;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .meta b {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  h2 {
+    font-size: 21px;
+    color: var(--heading);
+    margin: 46px 0 6px;
+    letter-spacing: -0.01em;
+  }
+  h2 .num {
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    margin-right: 10px;
+  }
+  .section-note {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0 0 18px;
+  }
+  h3 {
+    font-size: 15px;
+    color: var(--heading);
+    margin: 24px 0 10px;
+  }
+
+  p {
+    margin: 0 0 12px;
+  }
+  a {
+    color: var(--accent);
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 22px 0 4px;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 5px 11px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+  }
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .pill.green {
+    color: var(--green);
+    background: var(--green-bg);
+  }
+  .pill.green .dot {
+    background: var(--green);
+  }
+  .pill.yellow {
+    color: var(--yellow);
+    background: var(--yellow-bg);
+  }
+  .pill.yellow .dot {
+    background: var(--yellow);
+  }
+  .pill.red {
+    color: var(--red);
+    background: var(--red-bg);
+  }
+  .pill.red .dot {
+    background: var(--red);
+  }
+
+  /* Flow */
+  .flow {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+  }
+  .flow-step {
+    display: flex;
+    gap: 13px;
+    align-items: baseline;
+  }
+  .flow-step .idx {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .flow-step .txt {
+    font-size: 14.5px;
+  }
+  .flow-step .who {
+    font-weight: 700;
+    color: var(--heading);
+  }
+
+  /* Task cards */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 8px;
+  }
+  @media (max-width: 640px) {
+    .cards {
+      grid-template-columns: 1fr;
+    }
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 20px 8px;
+    box-shadow: var(--shadow);
+  }
+  .card > .card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .card .badge {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    padding: 3px 9px;
+    border-radius: 7px;
+  }
+  .card.be .badge {
+    color: var(--get);
+    background: var(--get-bg);
+  }
+  .card.ai .badge {
+    color: var(--post);
+    background: var(--post-bg);
+  }
+  .card h3 {
+    margin: 0;
+    font-size: 16px;
+  }
+  .card ol {
+    margin: 8px 0 14px;
+    padding-left: 20px;
+  }
+  .card ol li {
+    margin-bottom: 9px;
+    font-size: 14.5px;
+  }
+  .card .confirm {
+    border-top: 1px dashed var(--border-strong);
+    padding: 11px 0 14px;
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+  .card .confirm b {
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  /* Endpoint */
+  .endpoint {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px 20px;
+    box-shadow: var(--shadow);
+    margin-top: 14px;
+  }
+  .route {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .method {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    padding: 4px 9px;
+    border-radius: 7px;
+  }
+  .method.get {
+    color: var(--get);
+    background: var(--get-bg);
+  }
+  .method.post {
+    color: var(--post);
+    background: var(--post-bg);
+  }
+  .path {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--heading);
+    word-break: break-all;
+  }
+  .route .tag {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* Table */
+  .tbl-scroll {
+    overflow-x: auto;
+    margin: 12px 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 14px;
+  }
+  th,
+  td {
+    text-align: left;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    font-weight: 700;
+  }
+  td:first-child {
+    white-space: nowrap;
+  }
+  tr:last-child td {
+    border-bottom: none;
+  }
+  .field {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .yes {
+    color: var(--green);
+    font-weight: 700;
+  }
+  .chip-new {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: var(--new);
+    background: var(--new-bg);
+    padding: 2px 6px;
+    border-radius: 5px;
+    vertical-align: middle;
+  }
+
+  /* State label */
+  .state {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 18px 0 8px;
+  }
+  .state .sq {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+  }
+  .state.proc .sq {
+    background: var(--yellow);
+  }
+  .state.proc {
+    color: var(--yellow);
+  }
+  .state.done .sq {
+    background: var(--green);
+  }
+  .state.done {
+    color: var(--green);
+  }
+  .state.fail .sq {
+    background: var(--red);
+  }
+  .state.fail {
+    color: var(--red);
+  }
+
+  /* Code */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    margin: 0 0 4px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text);
+  }
+  pre code {
+    font-size: 13px;
+  }
+  .k {
+    color: var(--j-key);
+  }
+  .s {
+    color: var(--j-str);
+  }
+  .n {
+    color: var(--j-num);
+  }
+  .b {
+    color: var(--j-bool);
+    font-weight: 600;
+  }
+  p code,
+  li code,
+  td code {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 1px 6px;
+    font-size: 12.5px;
+    color: var(--text);
+  }
+
+  /* Rules */
+  ul.rules {
+    list-style: none;
+    margin: 12px 0;
+    padding: 0;
+  }
+  ul.rules li {
+    position: relative;
+    padding-left: 22px;
+    margin-bottom: 10px;
+    font-size: 14.5px;
+  }
+  ul.rules li::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 10px;
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+
+  /* Reference */
+  .ref {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+  }
+  .landmarks {
+    columns: 3 150px;
+    column-gap: 22px;
+    font-size: 12.5px;
+    margin: 6px 0 16px;
+  }
+  .landmarks .lm {
+    break-inside: avoid;
+    display: flex;
+    gap: 8px;
+    padding: 2px 0;
+  }
+  .landmarks .lm .i {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    width: 18px;
+    text-align: right;
+  }
+  .landmarks .lm .nm {
+    color: var(--text);
+  }
+  .conn {
+    font-size: 12.5px;
+  }
+  .conn .grp {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 4px 12px;
+    padding: 4px 0;
+    border-top: 1px solid var(--border);
+  }
+  .conn .grp:first-child {
+    border-top: none;
+  }
+  .conn .grp .lbl {
+    color: var(--muted);
+  }
+  .conn .grp .val {
+    color: var(--text);
+  }
+
+  /* Oneliner */
+  .oneliner {
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 15px;
+    margin-top: 20px;
+    color: var(--heading);
+  }
+  .oneliner b {
+    color: var(--accent);
+  }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">API Contract Brief</p>
+    <h1>Pose Feedback Overlay — việc cho BE &amp; AI</h1>
+    <p class="lede">
+      App phát lại video user quay và tô màu từng khớp theo từng frame — 🔴 sai · 🟡 gần đúng · 🟢 đúng — dựa hoàn toàn
+      trên data một API. App chỉ <b>vẽ</b>; AI <b>chấm</b>; BE <b>điều phối + trả API</b>.
+    </p>
+    <div class="meta">
+      <span><b>Ngày</b> · 2026-07-11</span>
+      <span><b>Từ</b> · App team (Ba)</span>
+      <span><b>Cho</b> · BE, AI</span>
+    </div>
+  </header>
+
+  <div class="legend">
+    <span class="pill green"><span class="dot"></span>green — đúng (score ≥ 0.8)</span>
+    <span class="pill yellow"><span class="dot"></span>yellow — gần đúng (0.5–0.8)</span>
+    <span class="pill red"><span class="dot"></span>red — sai (&lt; 0.5)</span>
+  </div>
+  <p class="section-note" style="margin-top: 10px">Ngưỡng gợi ý — <b>AI sở hữu và tự tinh chỉnh</b>.</p>
+
+  <h2><span class="num">01</span>Luồng hoạt động</h2>
+  <div class="flow">
+    <div class="flow-step">
+      <span class="idx">1</span
+      ><span class="txt"
+        ><span class="who">App → BE</span> · upload <code>video</code> + <code>keypoint.json</code> +
+        <code>exercise_id</code></span
+      >
+    </div>
+    <div class="flow-step">
+      <span class="idx">2</span
+      ><span class="txt"
+        ><span class="who">BE → App</span> · trả <code>job_id</code> ngay (<code>status: processing</code>)</span
+      >
+    </div>
+    <div class="flow-step">
+      <span class="idx">3</span
+      ><span class="txt"
+        ><span class="who">BE → AI</span> · đẩy job cho AI chấm (so với bài mẫu theo <code>exercise_id</code>)</span
+      >
+    </div>
+    <div class="flow-step">
+      <span class="idx">4</span
+      ><span class="txt"><span class="who">App → BE</span> · poll <code>GET /feedback/{job_id}</code> mỗi 2–3s</span>
+    </div>
+    <div class="flow-step">
+      <span class="idx">5</span
+      ><span class="txt"
+        ><span class="who">BE → App</span> · <code>processing</code> … rồi <code>done</code> kèm
+        <code>frames[]</code></span
+      >
+    </div>
+    <div class="flow-step">
+      <span class="idx">6</span
+      ><span class="txt"
+        ><span class="who">App</span> · replay video + vẽ overlay node đỏ/vàng/xanh theo <code>timestampMs</code></span
+      >
+    </div>
+  </div>
+
+  <h2><span class="num">02</span>Việc mỗi team</h2>
+  <div class="cards">
+    <div class="card be">
+      <div class="card-head">
+        <span class="badge">BE</span>
+        <h3>Backend cần làm</h3>
+      </div>
+      <ol>
+        <li>
+          Mở rộng <code>POST /user-exercises/upload</code>: nhận thêm field <code>exercise_id</code>; trả
+          <code>{ job_id, status:"processing" }</code>.
+        </li>
+        <li>Đẩy job cho AI chấm (queue/trigger tuỳ BE), lưu kết quả theo <code>job_id</code>.</li>
+        <li>
+          Endpoint mới <code>GET /user-exercises/feedback/{job_id}</code> trả 3 trạng thái: <code>processing</code> /
+          <code>done</code> / <code>failed</code>.
+        </li>
+        <li>Khuyến nghị bật <b>gzip</b> cho response <code>done</code>; đặt TTL lưu kết quả job.</li>
+      </ol>
+      <div class="confirm">
+        <b>BE cần chốt:</b> tên/đường dẫn endpoint feedback · cơ chế trigger AI · thời gian giữ kết quả.
+      </div>
+    </div>
+    <div class="card ai">
+      <div class="card-head">
+        <span class="badge">AI</span>
+        <h3>AI cần làm</h3>
+      </div>
+      <ol>
+        <li>
+          <b>Input:</b> keypoint JSON user (đã có sẵn — 33 node/frame, 10fps) + bài mẫu theo <code>exercise_id</code>.
+          Dùng lại đúng JSON này, <b>không trích lại</b>.
+        </li>
+        <li>
+          <b>Output:</b> mỗi frame (giữ đúng <code>timestampMs</code>), mỗi node: <code>status</code> +
+          <code>score</code> (0–1) + toạ độ <code>xNorm,yNorm</code>.
+        </li>
+        <li><b>Sở hữu ngưỡng màu</b> green/yellow/red.</li>
+        <li>Trả <code>summary.overallScore</code> (0–1) cho cả bài.</li>
+      </ol>
+      <div class="confirm">
+        <b>AI cần chốt:</b> ngưỡng chính thức 3 màu · cách chuẩn hoá điểm khi độ dài video user ≠ bài mẫu (theo rep?
+        theo pha động tác?).
+      </div>
+    </div>
+  </div>
+
+  <h2><span class="num">03</span>Endpoint A — Upload + kích hoạt chấm</h2>
+  <p class="section-note">Mở rộng endpoint đã có, chỉ thêm 1 field và <code>job_id</code> trong response.</p>
+  <div class="endpoint">
+    <div class="route">
+      <span class="method post">POST</span><span class="path">/user-exercises/upload</span
+      ><span class="tag">multipart/form-data</span>
+    </div>
+    <div class="tbl-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Có sẵn?</th>
+            <th>Mô tả</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="field">video_files</span></td>
+            <td><span class="yes">✓ có</span></td>
+            <td>Video user quay (mp4)</td>
+          </tr>
+          <tr>
+            <td><span class="field">json_files</span></td>
+            <td><span class="yes">✓ có</span></td>
+            <td>Keypoint JSON (schema 2.0)</td>
+          </tr>
+          <tr>
+            <td><span class="field">exercise_id</span> <span class="chip-new">MỚI</span></td>
+            <td>—</td>
+            <td>ID bài tập để AI biết so với mẫu nào</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Response 200</h3>
+    <pre class="json"><code>{ "job_id": "e28a3c9e-2c43-4675-8341-20b4e207e370", "status": "processing" }</code></pre>
+  </div>
+
+  <h2><span class="num">04</span>Endpoint B — Poll kết quả <span class="chip-new">MỚI</span></h2>
+  <div class="endpoint">
+    <div class="route">
+      <span class="method get">GET</span><span class="path">/user-exercises/feedback/{job_id}</span>
+    </div>
+
+    <div class="state proc"><span class="sq"></span>Đang xử lý</div>
+    <pre class="json"><code>{ "job_id": "...", "status": "processing", "progress": 0.4 }</code></pre>
+
+    <div class="state done"><span class="sq"></span>Xong — status: done</div>
+    <pre class="json"><code>{
+  "schemaVersion": "1.0",
+  "job_id": "...",
+  "status": "done",
+  "exerciseId": "abc",
+  "summary": {
+    "overallScore": 0.82,
+    "sampleFps": 10.0,
+    "frameWidth": 720,
+    "frameHeight": 405,
+    "framesScored": 1116
+  },
+  "frames": [
+    {
+      "timestampMs": 0,
+      "personDetected": true,
+      "nodes": [
+        { "index": 11, "xNorm": 0.42, "yNorm": 0.30, "status": "green",  "score": 0.95 },
+        { "index": 13, "xNorm": 0.40, "yNorm": 0.45, "status": "yellow", "score": 0.66 },
+        { "index": 15, "xNorm": 0.38, "yNorm": 0.60, "status": "red",    "score": 0.30 }
+      ]
+    },
+    {
+      "timestampMs": 100,
+      "personDetected": false,
+      "nodes": []
+    }
+  ]
+}</code></pre>
+
+    <div class="state fail"><span class="sq"></span>Lỗi — status: failed</div>
+    <pre class="json"><code>{ "job_id": "...", "status": "failed", "error": "mô tả lỗi" }</code></pre>
+  </div>
+
+  <h2><span class="num">05</span>Quy ước bắt buộc</h2>
+  <p class="section-note">Để 3 team khớp nhau — app map thẳng data lên khung video.</p>
+  <ul class="rules">
+    <li><code>status</code> ∈ <code>green | yellow | red</code>; <code>score</code> ∈ [0,1]. AI sở hữu ngưỡng.</li>
+    <li>
+      <code>xNorm,yNorm</code> ∈ [0,1], gốc toạ độ <b>góc trên-trái</b>, <b>cùng hệ với keypoint JSON</b> app đã upload
+      → app tính <code>px = xNorm × boxW</code>.
+    </li>
+    <li>
+      <code>timestampMs</code> phải <b>trùng đúng</b> các mốc trong keypoint JSON user (10fps) → app đồng bộ overlay
+      theo vị trí playback.
+    </li>
+    <li><code>index</code> theo 33 landmark BlazePose (xem mục 06).</li>
+    <li>Không thấy người: <code>personDetected: false</code>, <code>nodes: []</code>.</li>
+    <li><b>camelCase</b> cho toàn payload feedback (khớp keypoint schema 2.0 AI đang dùng).</li>
+    <li><b>gzip</b> cho response <code>done</code> (data ~vài MB với video dài).</li>
+  </ul>
+
+  <h2><span class="num">06</span>Tham chiếu: 33 landmark &amp; xương BlazePose</h2>
+  <div class="ref">
+    <h3 style="margin-top: 2px">Index → tên node</h3>
+    <div class="landmarks" id="landmarks"></div>
+    <h3>Cặp index để vẽ xương (connections)</h3>
+    <div class="conn">
+      <div class="grp"><span class="lbl">Thân</span><span class="val mono">(11,12) (11,23) (12,24) (23,24)</span></div>
+      <div class="grp">
+        <span class="lbl">Tay trái</span><span class="val mono">(11,13) (13,15) (15,17) (15,19) (15,21) (17,19)</span>
+      </div>
+      <div class="grp">
+        <span class="lbl">Tay phải</span><span class="val mono">(12,14) (14,16) (16,18) (16,20) (16,22) (18,20)</span>
+      </div>
+      <div class="grp">
+        <span class="lbl">Chân trái</span><span class="val mono">(23,25) (25,27) (27,29) (27,31) (29,31)</span>
+      </div>
+      <div class="grp">
+        <span class="lbl">Chân phải</span><span class="val mono">(24,26) (26,28) (28,30) (28,32) (30,32)</span>
+      </div>
+      <div class="grp">
+        <span class="lbl">Mặt (tuỳ chọn)</span
+        ><span class="val mono">(0,1) (1,2) (2,3) (3,7) (0,4) (4,5) (5,6) (6,8) (9,10)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="oneliner">
+    <b>Tóm 1 dòng:</b> BE thêm <code>exercise_id</code> vào upload + trả <code>job_id</code>, làm endpoint poll
+    <code>feedback/{job_id}</code>; AI chấm keypoint user so bài mẫu → trả mỗi frame/node
+    <code>status</code>+<code>score</code>+toạ độ theo schema trên. App lo phần vẽ overlay.
+  </div>
+
+  <footer>
+    Pose Feedback Overlay · API contract brief · 2026-07-11 — chi tiết đầy đủ trong
+    <code>docs/superpowers/specs/2026-07-11-pose-feedback-overlay-design.md</code>.
+  </footer>
+</div>
+
+<script>
+  // 33 BlazePose landmark names (đúng thứ tự index).
+  var NAMES = [
+    'nose',
+    'leftEyeInner',
+    'leftEye',
+    'leftEyeOuter',
+    'rightEyeInner',
+    'rightEye',
+    'rightEyeOuter',
+    'leftEar',
+    'rightEar',
+    'leftMouth',
+    'rightMouth',
+    'leftShoulder',
+    'rightShoulder',
+    'leftElbow',
+    'rightElbow',
+    'leftWrist',
+    'rightWrist',
+    'leftPinky',
+    'rightPinky',
+    'leftIndex',
+    'rightIndex',
+    'leftThumb',
+    'rightThumb',
+    'leftHip',
+    'rightHip',
+    'leftKnee',
+    'rightKnee',
+    'leftAnkle',
+    'rightAnkle',
+    'leftHeel',
+    'rightHeel',
+    'leftFootIndex',
+    'rightFootIndex',
+  ];
+  var box = document.getElementById('landmarks');
+  NAMES.forEach(function (nm, i) {
+    var row = document.createElement('div');
+    row.className = 'lm';
+    row.innerHTML = '<span class="i">' + i + '</span><span class="nm"></span>';
+    row.querySelector('.nm').textContent = nm;
+    box.appendChild(row);
+  });
+
+  // Tô màu JSON: escape trước, rồi tokenize keys/strings/numbers/keywords.
+  function highlight(code) {
+    var esc = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return esc.replace(
+      /("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false|null)\b|(-?\d+(?:\.\d+)?)/g,
+      function (m, str, colon, kw, num) {
+        if (str !== undefined) {
+          if (colon) return '<span class="k">' + str + '</span>' + colon;
+          return '<span class="s">' + str + '</span>';
+        }
+        if (kw !== undefined) return '<span class="b">' + kw + '</span>';
+        return '<span class="n">' + num + '</span>';
+      },
+    );
+  }
+  document.querySelectorAll('pre.json code').forEach(function (el) {
+    el.innerHTML = highlight(el.textContent);
+  });
+</script>
